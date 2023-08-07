@@ -1,0 +1,17 @@
+# Buscamos los datos en la API whethermap.org
+# Utilizaremos pronosticos para 5 días, en 10 ciudades.
+
+#1 Ciudades 
+función: 
+obtener_id_ciudad(ciudad):
+-->diccionario ids_ciudades = {{ciudad}: {city_id}}
+
+#2 request_ciudades, pronostico a 5 dias(cada3hs) para cada ciudad
+
+  # función de consulta --> extrae todos los datos y los guarda en un archivo json, con el nombre de la ciudad.
+
+  # función de consulta1 --> extraccion datos relevantes, observando la estructura del json
+  #              --> extrae lista de datos de pronostico cada 3 hs
+  #              --> extrae lista de datos de la ciudad requerida al dia de la fecha (salida y puesta del sol)
+
+#3 creo la bbdd, y el esquema de tablas
