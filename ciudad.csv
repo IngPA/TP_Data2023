@@ -1,0 +1,3 @@
+id_city,ciudad,coord,country,timezone,sunrise,susnset
+5128581,New York,"{'lat': 40.7143, 'lon': -74.006}",US,-14400,1691402293,1691453127
+3860259,Córdoba,"{'lat': -31.4135, 'lon': -64.1811}",AR,-10800,1691406000,1691444705

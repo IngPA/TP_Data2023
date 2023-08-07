@@ -62,8 +62,9 @@ def consulta1(ciudad, city_id):
     ciudad= response_json["city"]["name"]
     pronostico = []
     for i in response_json['list']:
-        j =[i['dt'],
-            i['dt_txt'],
+        j =[i['dt_txt'],
+            ciudad,
+            city_id,
             # if i['rain']['3h'] is not None, else:  n'precipitacion(acum3hs)', 'nieve(acum3hs)',
             # i['snow']['3h'],
             i['main']['temp'],
