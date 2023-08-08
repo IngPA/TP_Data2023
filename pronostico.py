@@ -3,11 +3,12 @@ import requests
 from sqlalchemy import create_engine, Column, Integer, String, JSON, ForeignKey, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship, Session 
 import pandas as pd
-"""
+import json
+
 # Creo bbdd
 if __name__ == "__main__": 
     funciones.create_database('pronosticos')        #usar minusculas
-"""
+
 #________________________________________________________________
 
 # Conexión a la base de datos PostgreSQL usando SQLAlchemy
@@ -19,7 +20,7 @@ nombre_bbdd = 'pronosticos'
 engine = create_engine(f'postgresql://{usuario}:{contraseña}@localhost/{nombre_bbdd}')
 
 Base = declarative_base()
-"""
+
 #________________________________________________________________
 # Estructura de la base de datos / definicion de tablas y relaciones
 
@@ -47,16 +48,16 @@ class Pronostico5dias(Base):
     clima = Column(String(50))
     id_city= Column(Integer, ForeignKey('city_data.id_city') )
     city_data = relationship(CitysDates)
-"""
+
 
 Session = sessionmaker(engine)
 session = Session()
-"""
+
 # Creación de la estructura de la base de datos
 if __name__ == '__main__':
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-"""
+
 #________________________________________________________________
 """
 # Lista de ciudades
@@ -64,7 +65,7 @@ if __name__ == '__main__':
 # Obtener los IDs de las ciudades
 
 ids_ciudades = {}
-for ciudad in cityList:
+xfor ciudad in cityList:
     city_id = funciones.obtener_id_ciudad(ciudad)
     if city_id:
         ids_ciudades[ciudad] = city_id
@@ -86,10 +87,10 @@ for ciudad,city_id in ids_ciudades1.items():
 
 #________________________________________________________________
 # convertir lista en dataframe
-dfciudad= pd.DataFrame(datos_ciudad,columns=['id_city', 'ciudad', 'coord', 'country', 'timezone', 'sunrise', 'susnset'])
-#dfpronosticos= pd.DataFrame(datos_pronostico,columns=['fecha', 'ciudad', 'id_city', 'temperatura', 'sensacion_termica', 'presion', 'humedad', 'viento_vel', 'viento_dir', 'clima'])
+dfciudad= pd.DataFrame(datos_ciudad,columns=['id_city', 'name_city', 'coord', 'country', 'timezone', 'sunrise', 'susnset'])
+dfpronosticos= pd.DataFrame(datos_pronostico,columns=['fecha', 'ciudad', 'id_city', 'temperatura', 'sensacion_termica', 'presion', 'humedad', 'viento_vel', 'viento_dir', 'clima'])
 
-print(dfciudad)
+#print(dfciudad)
 #print(dfpronosticos)
 """
 #________________________________________________________________
@@ -98,37 +99,60 @@ dfciudad.to_csv('ciudad.csv', index = False)
 dfpronosticos.to_csv('pronostico.csv', index = False)
 """
 #________________________________________________________________
-# Escritura desde dataframe a una base de datos
-#dfciudad.to_sql('nueva_tabla', engine, if_exists='replace', index=False)
-#genera un problema con los distintos tipos de datos
+        # Escritura desde dataframe a una base de datos
+        #dfciudad.to_sql('city_data', engine, if_exists='append', index=False)
+        #genera un problema con los distintos tipos de datos NO LO USAMOS EN ESTE CASO
 #________________________________________________________________
+# dataframe a json
+
+# Convertir DataFrame en diccionario
+dict_ciudad = dfciudad.to_dict(orient='records')
+dict_pronostico = dfpronosticos.to_dict(orient='records')
+
+# Convertir el diccionario en un objeto JSON
+json_city = json.dumps(dict_ciudad, indent=4)
+json_pronosticos = json.dumps(dict_pronostico, indent=4)
 
 #________________________________________________________________
-
-"""
-#Datos a almacenar
-#for ciudad in ids_ciudades: 
- #   pronostico, citysdate = funciones.consulta1(ciudad, city_id)
-#print(citysdate)
-#print(pronostico)
-
-datospronostico, datoscitysdate = funciones.consulta1('London', 2643743)
-#print(datoscitysdate)
-#print(datospronostico)
 
 # Almacenamiento de los datos en la base de datos
-#session = Session()
-city_data = CitysDates[id_city, coord, country, timezone, sunrise, susnset](datoscitysdate)
-session.add(city_data)
+
+Session = sessionmaker(bind=engine)
+session = Session()
+
+for index, row in dfciudad.iterrows():
+    new_row = CitysDates(
+        id_city=row['id_city'],
+        name_city=row['name_city'],
+        coord=row['coord'],
+        country=row['country'],
+        timezone=row['timezone'],
+        sunrise=row['sunrise'],
+        susnset=row['susnset']
+    )
+    session.add(new_row)
+
 session.commit()
 
-pronostico = Pronostico5dias[
-    dt, fecha, temperatura, sensacion_termica, presion, humedad, viento_vel, viento_dir, clima
-    ](datospronostico)
+for index, row in dfpronosticos.iterrows():
+    new_row = Pronostico5dias(
+        fecha=row['fecha'],
+        ciudad=row['ciudad'],
+        id_city=row['id_city'],
+        temperatura=row['temperatura'],
+        sensacion_termica=row['sensacion_termica'],
+        presion=row['presion'],
+        humedad=row['humedad'],
+        viento_vel=row['viento_vel'],
+        viento_dir=row['viento_dir'],
+        clima=row['clima']
+    )
+    session.add(new_row)
 
-session.add(pronostico)
 session.commit()
-"""
+
+
+
 session.close()
 
-print("Datos meteorológicos almacenados con éxito.")
+ 
