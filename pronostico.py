@@ -59,25 +59,25 @@ if __name__ == '__main__':
     Base.metadata.create_all(engine)
 
 #________________________________________________________________
-"""
+
 # Lista de ciudades
-#cityList = ["London", "New York", "Cordoba", "Taipei", "Buenos Aires", "Mexico City", "Dublin", "Amasia", "Bogota", "Tokio"]
+cityList = ["London", "New York", "Cordoba", "Taipei", "Buenos Aires", "Mexico City", "Dublin", "Amasia", "Bogota", "Tokio"]
 # Obtener los IDs de las ciudades
 
 ids_ciudades = {}
-xfor ciudad in cityList:
+for ciudad in cityList:
     city_id = funciones.obtener_id_ciudad(ciudad)
     if city_id:
         ids_ciudades[ciudad] = city_id
 #el diccionario ids_ciudades proporciona {ciudad:city_id}
-"""
+
 #________________________________________________________________
 # Obtención de datos meteorológicos de OpenWeatherMap
 # y Extracción de los datos relevantes --> consulta1 
-ids_ciudades1 = {'New York': 5128581, 'Cordoba': 3860259}
+#prueba: ids_ciudades1 = {'New York': 5128581, 'Cordoba': 3860259}
 datos_ciudad = []
 datos_pronostico = []
-for ciudad,city_id in ids_ciudades1.items():
+for ciudad,city_id in ids_ciudades.items():
   pronostico, citysdate = funciones.consulta1(ciudad,city_id)
   datos_ciudad.append(citysdate)
   datos_pronostico.extend(pronostico)
@@ -92,12 +92,12 @@ dfpronosticos= pd.DataFrame(datos_pronostico,columns=['fecha', 'ciudad', 'id_cit
 
 #print(dfciudad)
 #print(dfpronosticos)
-"""
+
 #________________________________________________________________
 # convetir dataframe en archivos csv
 dfciudad.to_csv('ciudad.csv', index = False)
 dfpronosticos.to_csv('pronostico.csv', index = False)
-"""
+
 #________________________________________________________________
         # Escritura desde dataframe a una base de datos
         #dfciudad.to_sql('city_data', engine, if_exists='append', index=False)
@@ -133,6 +133,7 @@ for index, row in dfciudad.iterrows():
     session.add(new_row)
 
 session.commit()
+print('Datos tabla city_date cargados')
 
 for index, row in dfpronosticos.iterrows():
     new_row = Pronostico5dias(
@@ -148,10 +149,8 @@ for index, row in dfpronosticos.iterrows():
         clima=row['clima']
     )
     session.add(new_row)
-
 session.commit()
-
-
+print('Datos tabla pronostico 5 dias cargados')
 
 session.close()
 
