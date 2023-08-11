@@ -18,23 +18,6 @@ def obtener_id_ciudad(ciudad):
         if data['count'] > 0:
             return data['list'][0]['id']
     return None
-
-
-""" 
-cityList = ["London", "New York", "Cordoba", "Taipei", "Buenos Aires", "Mexico City", "Dublin", "Amasia", "Bogota", "Tokio"]
-
-if __name__ == "__main__": 
-    # Obtener los IDs de las ciudades
-    ids_ciudades = {}
-    for ciudad in cityList:
-        city_id = obtener_id_ciudad(ciudad)
-        if city_id:
-            ids_ciudades[ciudad] = city_id
-
-    # Imprimir los IDs de las ciudades
-    for ciudad, city_id in ids_ciudades.items():
-        print(f"{ciudad}: {city_id}")
-"""
         
 """
 Funcion consulta1: busca en la api los pronosticos(json), 

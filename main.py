@@ -74,13 +74,15 @@ for ciudad in cityList:
 Obtención de datos meteorológicos de OpenWeatherMap
 y Extracción de los datos relevantes --> consulta1() 
 """
+print('Buscando los pronosticos en whethermap...')
 datos_ciudad = []
 datos_pronostico = []
 for ciudad,city_id in ids_ciudades.items():
   pronostico, citysdate = funciones.consulta1(ciudad,city_id)
   datos_ciudad.append(citysdate)
   datos_pronostico.extend(pronostico)
- 
+print("Se obtuvieron los pronosticos de whethermap exitosamente") 
+
 """
 Convertir lista en dataframe
 """
@@ -92,6 +94,7 @@ Convetir dataframe en archivos csv
 """
 dfciudad.to_csv('ciudad.csv', index = False)
 dfpronosticos.to_csv('pronostico.csv', index = False)
+print("Se crearon archivos ciudad.csv y pronostico.csv' ")
 
 """
 Convertir DataFrame en diccionario
