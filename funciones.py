@@ -1,19 +1,15 @@
-
 import requests
 import config
-
-#_________________________________________________________________________
-# Funciones:
-#  1 Función para obtener el ID de una ciudad, mediante nombre existente en listado
-#  2 Función consulta api whetermap endpoint forecast
-#  3 Función creacion nueva bbdd en postgres
-
-#_________________________________________________________________________
-# 1 
-# API Key de OpenWeatherMap
+from config import clavepostgres
+import psycopg2
+import json
 apikey = config.mykey
 
-# Función para obtener el ID de una ciudad
+"""
+obtener_id_ciudad: dada una ciudad, devuelve el id segun documentacion de la appi
+que es una clave unica para cada ciudad
+
+"""
 def obtener_id_ciudad(ciudad):
     url = f"http://api.openweathermap.org/data/2.5/find?appid={apikey}&q={ciudad}"
     response = requests.get(url)
@@ -23,9 +19,9 @@ def obtener_id_ciudad(ciudad):
             return data['list'][0]['id']
     return None
 
-# Lista de ciudades
-cityList = ["London", "New York", "Cordoba", "Taipei", "Buenos Aires", "Mexico City", "Dublin", "Amasia", "Bogota", "Tokio"]
 
+""" 
+cityList = ["London", "New York", "Cordoba", "Taipei", "Buenos Aires", "Mexico City", "Dublin", "Amasia", "Bogota", "Tokio"]
 
 if __name__ == "__main__": 
     # Obtener los IDs de las ciudades
@@ -38,37 +34,29 @@ if __name__ == "__main__":
     # Imprimir los IDs de las ciudades
     for ciudad, city_id in ids_ciudades.items():
         print(f"{ciudad}: {city_id}")
-
-#_________________________________________________________________________
-# 2 Consulta a la API, con estructura
-# pronostico para cinco días
-### seleccionando datos de interes ###
-import requests
-import json
-import config
-
+"""
+        
+"""
+Funcion consulta1: busca en la api los pronosticos(json), 
+y devuelve las listas de datos pronostico y citysdate. 
+"""
 #construcción de la función de consulta endpoint forecast
 def consulta1(ciudad, city_id):
-  # API Key de OpenWeatherMap
-  apikey = config.mykey
-  #Ciudad id --BUSCA EN DICCIONARIO
 
-  # construccion url
+  apikey = config.mykey
+ 
   base_url= 'https://api.openweathermap.org/data/2.5/forecast?'
   url = f'{base_url}id={city_id}&appid={apikey}&units=metric'
 
-  # llamada HTTP GET
   response = requests.get(url)
   if response.status_code == 200:
-    response_json = response.json()      #trae los pronosticos a 5 dias para la ciudad consultada,
+    response_json = response.json()    
     ciudad= response_json["city"]["name"]
     pronostico = []
     for i in response_json['list']:
         j =[i['dt_txt'],
             ciudad,
             city_id,
-            # if i['rain']['3h'] is not None, else:  n'precipitacion(acum3hs)', 'nieve(acum3hs)',
-            # i['snow']['3h'],
             i['main']['temp'],
             i['main']['feels_like'],
             i['main']['pressure'],
@@ -78,10 +66,8 @@ def consulta1(ciudad, city_id):
             i['weather'][0]['description']
             ]
         pronostico.append(j)
-    #print(pronostico)
-    # Selecciono los datos relevantes de cada json para cada ciudad
-    # caracteristicas de las ciudades consultadas
-    citysdate = [                           #response_json['city'],
+ 
+    citysdate = [
             response_json['city']['id'],
             response_json['city']['name'],
             response_json['city']['coord'],
@@ -90,20 +76,14 @@ def consulta1(ciudad, city_id):
             response_json['city']['sunrise'],
             response_json['city']['sunset'],
             ]
-    #print(citysdate)
-
     return pronostico, citysdate
   else:
     print (response.status_code)
 
-#pronostico, citysdate = consulta1('London', 2643743)
-#print(citysdate)
-#print(pronostico)
 
-#_________________________________________________________________________
-# 3 
-from config import clavepostgres
-import psycopg2
+"""
+Create_database: crea una nueva base de datos
+"""
 
 def create_database(nombre_base_de_datos): 
     nueevabd = nombre_base_de_datos
@@ -131,15 +111,3 @@ def create_database(nombre_base_de_datos):
         if conn: 
             conn.close() 
 
-if __name__ == "__main__": 
-    create_database('mydb')
-    """
-    for i in 1,2: 
-        databasename= f'mydb{i}'
-        create_database(databasename)
-    """
-
-#_________________________________________________________________________
-
-
-#_________________________________________________________________________
