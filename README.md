@@ -28,5 +28,5 @@ clavepostgres = 'your_postgres_password'
 - Fede
 - Fernando
 - Roberto Eugenio Salas
-- Tony
+- Pablo Klusacek
 - Jorge Horacio, Garcia Akiyama
