@@ -24,7 +24,7 @@ clavepostgres = 'your_postgres_password'
 
 ### Equipo 5
 - Paola
-- Polly
+- Yanina Belen Badaro
 - Fede
 - Fernando
 - Roberto Eugenio Salas
