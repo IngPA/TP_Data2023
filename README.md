@@ -21,3 +21,12 @@ clavepostgres = 'your_postgres_password'
 
 5. Run the main.py script to start fetching weather data and populating the database
   `python main.py`
+
+### Equipo 5
+- Paola
+- Polly
+- Fede
+- Fernando
+- Roberto
+- Tony
+- Jorge Horacio, Garcia Akiyama
