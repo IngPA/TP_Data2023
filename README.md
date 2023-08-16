@@ -20,3 +20,4 @@ mykey = 'your_openweather_api_key'
 clavepostgres = 'your_postgres_password'
 
 5. Run the main.py script to start fetching weather data and populating the database
+  `python main.py`
