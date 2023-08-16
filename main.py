@@ -6,7 +6,7 @@ import pandas as pd
 import json
 
 """
-Creacion nueva base de datos
+Creacion nueva base de datos si no existe
 """
 if __name__ == "__main__": 
     funciones.create_database('pronosticos') 
