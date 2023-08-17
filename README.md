@@ -23,7 +23,7 @@ clavepostgres = 'your_postgres_password'
   `python main.py`
 
 ### Equipo 5
-- Paola
+- Paola Arismendi
 - Yanina Belen Badaro
 - Fede
 - Fernando
