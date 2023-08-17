@@ -26,7 +26,7 @@ clavepostgres = 'your_postgres_password'
 - Paola Arismendi
 - Yanina Belen Badaro
 - Fede
-- Fernando
+- Fernando Escobar
 - Roberto Eugenio Salas
 - Pablo Klusacek
 - Jorge Horacio, Garcia Akiyama
